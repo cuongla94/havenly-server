@@ -23,6 +23,6 @@ export const ProductSchema = gql`
   type Query {
     getProducts: [Product]
     getProductById(id: String!): Product
-    searchProducts(brand: String, name: String): [Product]
+    searchProducts(searchTerm: String!): [Product]
   }
 `;

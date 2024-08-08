@@ -31,26 +31,27 @@ export const ProductResolver = {
         throw new Error(`Error fetching product by ID: ${error.message}`);
       }
     },
-    searchProducts: async (_, { brand, name }, { db }) => {
+    searchProducts: async (_, { searchTerm }, { db }) => {
       try {
-        const query = {};
-        if (brand) {
-          query['productDetails.productBrand'] = { $regex: brand, $options: 'i' };
-        }
-        if (name) {
-          query['productDetails.productName'] = { $regex: name, $options: 'i' };
-        }
-        const products = await db.collection('products').find(query).toArray();
+        const products = await db.collection('products')
+          .find({
+            $or: [
+              { "productDetails.productBrand": { $regex: searchTerm, $options: 'i' } },
+              { "productDetails.productName": { $regex: searchTerm, $options: 'i' } }
+            ]
+          })
+          .toArray();
+
         return products.map(product => ({
-          id: product._id.toString(),
-          uniqueIdentifier: product.uniqueIdentifier,
-          productDetails: product.productDetails,
+          id: product._id,
+          uniqueId: product.uniqueId,
           productSource: product.productSource,
           productSourceUrl: product.productSourceUrl,
+          productDetails: product.productDetails,
         }));
       } catch (error: any) {
         throw new Error(`Error searching products: ${error.message}`);
       }
-    },
+    }
   },
 };
