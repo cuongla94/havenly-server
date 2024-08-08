@@ -20,9 +20,20 @@ export const ProductSchema = gql`
     productDetails: ProductDetails
   }
 
+  type BrandCount {
+    productBrand: String
+    count: Int
+  }
+
   type Query {
-    getProducts: [Product]
+    getProducts(gender: String, brand: String, searchTerm: String, limit: Int, offset: Int): ProductResponse
     getProductById(id: String!): Product
-    searchProducts(searchTerm: String!): [Product]
+    searchProducts(searchTerm: String!, gender: String, limit: Int, offset: Int): ProductResponse
+  }
+
+  type ProductResponse {
+    products: [Product]
+    totalCount: Int
+    brandCounts: [BrandCount]
   }
 `;
