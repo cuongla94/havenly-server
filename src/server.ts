@@ -26,7 +26,7 @@ const startServer = async () => {
     const server = new ApolloServer<MyContext>({
       schema: GraphqlSchema,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    });
+csrfPrevention: false    });
 
     await server.start();
     app.use(
