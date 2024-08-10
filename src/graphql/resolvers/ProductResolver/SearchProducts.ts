@@ -1,6 +1,6 @@
 import { Document } from 'mongodb';
 
-export const SearchProducts = async (_, { searchTerm, filter, limit, offset }, { db }) => {
+export const searchProducts = async (_, { searchTerm, filter, limit, offset }, { db }) => {
   const query: Document = { $and: [] };
 
   if (filter) {

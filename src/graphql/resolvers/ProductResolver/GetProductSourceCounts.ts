@@ -1,4 +1,4 @@
-export const GetProductSourceCounts = async (_, __, { db }) => {
+export const getProductSourceCounts = async (_, __, { db }) => {
     try {
       const productSourceCounts = await db.collection('products').countDocuments({});
       return [{ count: productSourceCounts }];

@@ -1,8 +1,8 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { ProductSchema } from './schemas';
-import { ProductResolver } from './resolvers/ProductResolver';
+import { ProductSchema, SearchSchema } from './schemas';
+import { ProductResolver, SearchResolver } from './resolvers';
 
 export const GraphqlSchema = makeExecutableSchema({
-  typeDefs: [ProductSchema],
-  resolvers: [ProductResolver],
+  typeDefs: [ProductSchema, SearchSchema],
+  resolvers: [ProductResolver, SearchResolver],
 });

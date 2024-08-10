@@ -1,11 +1,11 @@
-import { GetProducts } from './GetProducts';
-import { SearchProducts } from './SearchProducts';
-import { GetProductSourceCounts } from './GetProductSourceCounts';
+import { getProducts } from './GetProducts';
+import { searchProducts } from './SearchProducts';
+import { getProductSourceCounts } from './GetProductSourceCounts';
 
 export const ProductResolver = {
   Query: {
-    GetProducts,
-    SearchProducts,
-    GetProductSourceCounts,
+    getProducts,
+    searchProducts,
+    getProductSourceCounts,
   }
 };
