@@ -34,13 +34,13 @@ export const ProductSchema = gql`
     products: [Product]
     totalCount: Int
     brandCounts: [BrandCount]
-    sourceCounts: [SourceCount]
   }
 
   type Query {
     getProducts(gender: String, brand: String, searchTerm: String, limit: Int, offset: Int): ProductResponse
     getProductById(id: String!): Product
     searchProducts(searchTerm: String!, gender: String, limit: Int, offset: Int): ProductResponse
+    getSourceCounts: [SourceCount]  # New query to get sourceCounts
   }
 `;
 
