@@ -10,7 +10,7 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const http_1 = __importDefault(require("http"));
 const cors_1 = __importDefault(require("cors"));
-const graphql_1 = require("./graphql"); // Adjust the import based on your file structure
+const graphql_1 = require("./graphql");
 const services_1 = require("./services");
 const logger_1 = __importDefault(require("./loaders/logger"));
 const config_1 = require("./config");
@@ -25,7 +25,15 @@ const startServer = async () => {
             plugins: [(0, drainHttpServer_1.ApolloServerPluginDrainHttpServer)({ httpServer })],
         });
         await server.start();
-        app.use('/graphql', (0, cors_1.default)(), express_1.default.json(), (0, express4_1.expressMiddleware)(server, {
+        const corsOptions = {
+            origin: [
+                'http://localhost:5000'
+            ],
+            methods: ['GET', 'POST', 'DELETE', 'PATCH'],
+            allowedHeaders: ['Content-Type', 'Authorization'],
+            credentials: true,
+        };
+        app.use('/graphql', (0, cors_1.default)(corsOptions), express_1.default.json(), (0, express4_1.expressMiddleware)(server, {
             context: async ({ req }) => ({ token: req.headers.token, db }),
         }));
         await new Promise((resolve) => httpServer.listen({ port: process.env.PORT || config_1.config.port }, resolve));

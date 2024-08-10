@@ -1,7 +1,6 @@
-# Use an official Node.js runtime as a parent image
-FROM node:16-alpine
+# Stage 1: Build the application
+FROM node:16-alpine AS builder
 
-# Set the working directory in the container
 WORKDIR /app
 
 # Copy .npmrc for npm authentication
@@ -16,9 +15,14 @@ RUN npm install --production
 # Copy the rest of the application code
 COPY . .
 
-# Expose the port the app runs on
+# Stage 2: Run the application
+FROM node:16-alpine
+
+WORKDIR /app
+
+# Copy only the necessary files from the build stage
+COPY --from=builder /app .
+
 EXPOSE 4000
 
-# Start the application
 CMD ["npm", "start"]
-
