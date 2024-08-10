@@ -1,32 +1,6 @@
 import { gql } from 'apollo-server-express';
 
-export const ProductSchema = gql`
-  enum ProductGender {
-    male
-    female
-    unisex
-  }
-
-  enum ProductType {
-    fragrance
-    bath
-    skincare
-    makeup
-  }
-
-  enum ProductCurrency {
-    AUD
-    USD
-    EUR
-  }
-
-  input ProductFilterInput {
-    gender: ProductGender
-    brand: String
-    productType: ProductType
-    searchTerm: String
-  }
-
+export const ProductTypes = gql`
   type ProductPriceHistory {
     price: String
     date: String
@@ -73,12 +47,5 @@ export const ProductSchema = gql`
     totalCount: Int
     productBrandCounts: [ProductBrandCount]
     productSourceCounts: [ProductSourceCount]
-  }
-
-  type Query {
-    getProducts(filter: ProductFilterInput, limit: Int, offset: Int): ProductResponse
-    getProductById(id: String!): Product
-    searchProducts(searchTerm: String!, filter: ProductFilterInput, limit: Int, offset: Int): ProductResponse
-    getProductSourceCounts: [ProductSourceCount]
   }
 `;
