@@ -14,11 +14,22 @@ export const ProductSchema = gql`
     makeup
   }
 
+  enum ProductCurrency {
+    AUD
+    USD
+    EUR
+  }
+
   input ProductFilterInput {
     gender: ProductGender
     brand: String
     productType: ProductType
     searchTerm: String
+  }
+
+  type ProductPriceHistory {
+    price: String
+    date: String
   }
 
   type ProductDetails {
@@ -31,38 +42,43 @@ export const ProductSchema = gql`
     productImage: String
     productGender: ProductGender
     productType: ProductType  
-    productRating: Float
-    productCategories: [String]
+    productSubType: String
+    productSKU: String
+    productUPC: String
+    productStockQuantity: Int
+    productInStock: Boolean
+    productCurrency: ProductCurrency
+    productShippingCost: String
+    productRetailer: String
+    priceHistory: [ProductPriceHistory]
   }
 
   type Product {
     id: ID!
     uniqueId: String
-    productSource: String
     productSourceUrl: String
     productDetails: ProductDetails
   }
 
-  type BrandCount {
-    productBrand: String
+  type ProductBrandCount {
     count: Int
   }
 
-  type SourceCount {
-    productSource: String
+  type ProductSourceCount {
     count: Int
   }
 
   type ProductResponse {
     products: [Product]
     totalCount: Int
-    brandCounts: [BrandCount]
+    productBrandCounts: [ProductBrandCount]
+    productSourceCounts: [ProductSourceCount]
   }
 
   type Query {
     getProducts(filter: ProductFilterInput, limit: Int, offset: Int): ProductResponse
     getProductById(id: String!): Product
     searchProducts(searchTerm: String!, filter: ProductFilterInput, limit: Int, offset: Int): ProductResponse
-    getSourceCounts: [SourceCount]
+    getProductSourceCounts: [ProductSourceCount]
   }
 `;
