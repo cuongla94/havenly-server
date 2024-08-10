@@ -1,22 +1,5 @@
-import mongoose, { Document, Schema } from 'mongoose';
-
-interface IProductDetails extends Document {
-  productName: string;
-  productBrand: string;
-  productSizeAvailable: string;
-  productDiscountPrice: string;
-  productRetailPrice: string;
-  productLink: string;
-  productImage: string;
-  productGender: string;
-}
-
-interface IProduct extends Document {
-  uniqueIdentifier: string;
-  productSource: string;
-  productSourceUrl: string;
-  productDetails: IProductDetails;
-}
+import mongoose, { Schema, Document } from 'mongoose';
+import { IProduct, IProductDetails, IProductGender, IProductType } from '../types';
 
 const ProductDetailsSchema: Schema = new Schema({
   productName: { type: String, required: true },
@@ -26,16 +9,17 @@ const ProductDetailsSchema: Schema = new Schema({
   productRetailPrice: { type: String },
   productLink: { type: String },
   productImage: { type: String },
-  productGender: { type: String },
+  productGender: { type: String, enum: Object.values(IProductGender), required: true },  // Use enum for gender
+  productType: { type: String, enum: Object.values(IProductType), required: true },  // Use enum for type
 });
 
 const ProductSchema: Schema = new Schema({
-  uniqueIdentifier: { type: String, unique: true, required: true },
+  uniqueId: { type: String, unique: true, required: true },  // Changed to match interface naming
   productSource: { type: String, required: true },
   productSourceUrl: { type: String, required: true },
   productDetails: { type: ProductDetailsSchema, required: true },
 });
 
-const Product = mongoose.model<IProduct>('Product', ProductSchema);
+const Product = mongoose.model<IProduct & Document>('Product', ProductSchema);
 
-export { Product, IProduct, IProductDetails}
+export { Product, IProduct, IProductDetails };

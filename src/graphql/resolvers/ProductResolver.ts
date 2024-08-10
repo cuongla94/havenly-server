@@ -1,15 +1,34 @@
+import { Document } from 'mongodb';
+
 export const ProductResolver = {
   Query: {
-    getProducts: async (_, { gender, brand, searchTerm, limit, offset }, { db }) => {
-      const query: { [key: string]: any } = {};
+    getProducts: async (_, { gender, brand, productType, searchTerm, limit, offset }, { db }) => {
+      const query: Document = { $and: [] };
 
-      if (gender) query['productDetails.productGender'] = gender;
-      if (brand) query['productDetails.productBrand'] = { $regex: brand, $options: 'i' };
+      if (productType) {
+        query.$and.push({ "productDetails.productType": productType });
+      }
+
+      if (gender && gender !== "All") {
+        query.$and.push({ "productDetails.productGender": gender });
+      }
+
+      if (brand) {
+        query.$and.push({ "productDetails.productBrand": { $regex: brand, $options: 'i' } });
+      }
+
       if (searchTerm) {
-        query.$or = [
-          { "productDetails.productBrand": { $regex: searchTerm, $options: 'i' } },
-          { "productDetails.productName": { $regex: searchTerm, $options: 'i' } },
-        ];
+        query.$and.push({
+          $or: [
+            { "productDetails.productBrand": { $regex: searchTerm, $options: 'i' } },
+            { "productDetails.productName": { $regex: searchTerm, $options: 'i' } },
+            { "productDetails.productGender": { $regex: searchTerm, $options: 'i' } }
+          ]
+        });
+      }
+
+      if (query.$and.length === 0) {
+        delete query.$and;
       }
 
       const totalCount = await db.collection('products').countDocuments(query);
@@ -24,6 +43,7 @@ export const ProductResolver = {
               productName: 1,
               productBrand: 1,
               productGender: 1,
+              productType: 1,
               productImage: 1,
               productSizeAvailable: 1,
               productRetailPrice: 1,
@@ -54,19 +74,30 @@ export const ProductResolver = {
       };
     },
 
-    searchProducts: async (_, { searchTerm, gender, limit, offset }, { db }) => {
-      const query: { [key: string]: any } = {
-        $and: [
-          {
-            $or: [
-              { "productDetails.productBrand": { $regex: searchTerm, $options: 'i' } },
-              { "productDetails.productName": { $regex: searchTerm, $options: 'i' } }
-            ]
-          }
-        ]
-      };
+    searchProducts: async (_, { searchTerm, productType, gender, limit, offset }, { db }) => {
+      const query: Document = { $and: [] };
 
-      if (gender) query.$and.push({ "productDetails.productGender": gender });
+      if (productType) {
+        query.$and.push({ "productDetails.productType": productType });
+      }
+
+      if (gender && gender !== "All") {
+        query.$and.push({ "productDetails.productGender": gender });
+      }
+
+      if (searchTerm) {
+        query.$and.push({
+          $or: [
+            { "productDetails.productBrand": { $regex: searchTerm, $options: 'i' } },
+            { "productDetails.productName": { $regex: searchTerm, $options: 'i' } },
+            { "productDetails.productGender": { $regex: searchTerm, $options: 'i' } }
+          ]
+        });
+      }
+
+      if (query.$and.length === 0) {
+        delete query.$and;
+      }
 
       const totalCount = await db.collection('products').countDocuments(query);
       const products = await db.collection('products')
@@ -80,6 +111,7 @@ export const ProductResolver = {
               productName: 1,
               productBrand: 1,
               productGender: 1,
+              productType: 1,
               productImage: 1,
               productSizeAvailable: 1,
               productRetailPrice: 1,

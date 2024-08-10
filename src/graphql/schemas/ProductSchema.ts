@@ -1,6 +1,26 @@
 import { gql } from 'apollo-server-express';
 
 export const ProductSchema = gql`
+  enum ProductGender {
+    male
+    female
+    unisex
+  }
+
+  enum ProductType {
+    fragrance
+    bath
+    skincare
+    makeup
+  }
+
+  input ProductFilterInput {
+    gender: ProductGender
+    brand: String
+    productType: ProductType
+    searchTerm: String
+  }
+
   type ProductDetails {
     productName: String
     productBrand: String
@@ -9,7 +29,10 @@ export const ProductSchema = gql`
     productRetailPrice: String
     productLink: String
     productImage: String
-    productGender: String
+    productGender: ProductGender
+    productType: ProductType  
+    productRating: Float
+    productCategories: [String]
   }
 
   type Product {
@@ -37,10 +60,9 @@ export const ProductSchema = gql`
   }
 
   type Query {
-    getProducts(gender: String, brand: String, searchTerm: String, limit: Int, offset: Int): ProductResponse
+    getProducts(filter: ProductFilterInput, limit: Int, offset: Int): ProductResponse
     getProductById(id: String!): Product
-    searchProducts(searchTerm: String!, gender: String, limit: Int, offset: Int): ProductResponse
-    getSourceCounts: [SourceCount]  # New query to get sourceCounts
+    searchProducts(searchTerm: String!, filter: ProductFilterInput, limit: Int, offset: Int): ProductResponse
+    getSourceCounts: [SourceCount]
   }
 `;
-

@@ -39,8 +39,8 @@ const startServer = async () => {
         await new Promise((resolve) => httpServer.listen({ port: process.env.PORT || config_1.config.port }, resolve));
         logger_1.default.info(`
       ################################################
-      🛡️  Server listening on port: ${process.env.PORT || config_1.config.port} 🛡️
-      🌐 http://localhost:${process.env.PORT || config_1.config.port}/graphql
+      🛡️  Server listening on port: ${config_1.config.port} 🛡️
+      🌐 http://localhost:${config_1.config.port}/graphql
       ################################################
     `);
     }
