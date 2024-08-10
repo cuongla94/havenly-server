@@ -53,8 +53,8 @@ const startServer = async () => {
     );
     Logger.info(`
       ################################################
-      🛡️  Server listening on port: ${process.env.PORT || config.port} 🛡️
-      🌐 http://localhost:${process.env.PORT || config.port}/graphql
+      🛡️  Server listening on port: ${config.port} 🛡️
+      🌐 http://localhost:${config.port}/graphql
       ################################################
     `);
   } catch (error) {
