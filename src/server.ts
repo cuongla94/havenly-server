@@ -5,7 +5,7 @@ import express, { Application } from 'express';
 import dotenv from 'dotenv';
 import http from 'http';
 import cors from 'cors';
-import { GraphqlSchema } from './graphql'; // Adjust the import based on your file structure
+import { GraphqlSchema } from './graphql';
 import { connectToHavenlyDb, closeConnection } from './services';
 import Logger from './loaders/logger';
 import { config } from './config';
@@ -26,13 +26,22 @@ const startServer = async () => {
     const server = new ApolloServer<MyContext>({
       schema: GraphqlSchema,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-      
     });
 
     await server.start();
+
+    const corsOptions = {
+      origin: [
+        'http://localhost:5000'
+      ],
+      methods: ['GET', 'POST', 'DELETE', 'PATCH'],
+      allowedHeaders: ['Content-Type', 'Authorization'], 
+      credentials: true,
+    };
+
     app.use(
       '/graphql',
-      cors<cors.CorsRequest>(),
+      cors(corsOptions),
       express.json(),
       expressMiddleware(server, {
         context: async ({ req }) => ({ token: req.headers.token, db }),
@@ -55,4 +64,3 @@ const startServer = async () => {
 };
 
 startServer();
-
