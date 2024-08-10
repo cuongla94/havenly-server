@@ -1,28 +1,23 @@
-# Stage 1: Build the application
-FROM node:16-alpine AS builder
+# Use an official Node.js runtime as a parent image
+FROM node:16-alpine
 
+# Set the working directory in the container
 WORKDIR /app
-
-# Copy .npmrc for npm authentication
-COPY .npmrc .npmrc
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --production
+# Install dependencies, including dev dependencies
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
 
-# Stage 2: Run the application
-FROM node:16-alpine
+# Install nodemon globally
+RUN npm install -g nodemon
 
-WORKDIR /app
-
-# Copy only the necessary files from the build stage
-COPY --from=builder /app .
-
+# Expose the port the app runs on
 EXPOSE 4000
 
-CMD ["npm", "start"]
+# Start the application using nodemon
+CMD ["nodemon", "server.ts"]

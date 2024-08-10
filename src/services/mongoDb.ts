@@ -1,8 +1,9 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, Db } from 'mongodb';
 import { config } from '../config';
 import Logger from '../loaders/logger';
 
-let db: any;
+let client: MongoClient;
+let db: Db;
 
 export const connectToHavenlyDb = async () => {
   if (db) {
@@ -10,7 +11,7 @@ export const connectToHavenlyDb = async () => {
   }
 
   try {
-    const client = new MongoClient(config.mongoURL);
+    client = new MongoClient(config.mongoURL);
 
     await client.connect();
     db = client.db(); // Use the default database specified in the connection string
@@ -23,8 +24,9 @@ export const connectToHavenlyDb = async () => {
 };
 
 export const closeConnection = async () => {
-  if (db) {
-    await db.client.close();
+  if (client) {
+    await client.close();
     Logger.info('Disconnected from the database');
   }
 };
+
