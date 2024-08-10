@@ -1,1 +1,1 @@
-export * from './ProductTypes';
+export * from './Product';

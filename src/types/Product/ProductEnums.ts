@@ -1,4 +1,4 @@
-// enums
+// Product Gender Enum
 export enum IProductGender {
     male = 'male',
     female = 'female',
@@ -64,52 +64,8 @@ export enum IProductSubType {
     footCream = 'foot_cream'
 }
 
-export interface IProductPriceHistory {
-    price: string;
-    date: Date;
+export enum IProductCurrency {
+    AUD = 'AUD',
+    USD = 'USD',
+    EUR = 'EUR'
 }
-
-export interface IProductDetails {
-    productName: string;
-    productBrand: string;
-    productSizeAvailable?: string;
-    productDiscountPrice?: string;
-    productRetailPrice: string; 
-    productLink?: string;
-    productImage?: string;
-    productGender: IProductGender;
-    productType: IProductType;
-    productSubType?: IProductSubType;
-    productSKU: string;
-    productUPC: string;
-    productStockQuantity: number;
-    productInStock: boolean;
-    priceHistory: IProductPriceHistory[]; 
-}
-
-export interface IProduct {
-    uniqueId: string;
-    productSource: string;
-    productSourceUrl: string;
-    productDetails: IProductDetails;
-}
-
-export interface IProductBrandCount {
-    productBrand: string;
-    count: number;
-}
-
-export interface IProductSourceCount {
-    productSource: string;
-    count: number;
-}
-
-export interface IProductResponse {
-    products: IProduct[];
-    totalCount: number;
-    brandCounts: IProductBrandCount[];
-    sourceCounts: IProductSourceCount[];
-}
-
-export interface IProductDetailsDocument extends IProductDetails, Document {}
-export interface IProductDocument extends IProduct, Document {}
