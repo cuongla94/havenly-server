@@ -3,18 +3,27 @@ import { Product, TopSellersProduct } from "../../../../models";
 
 export const updateTopSellersProduct = async (uniqueId: string) => {
   try {
+    const product = await Product.findOne({ uniqueId });
+
+    if (!product) {
+      console.log("No products found with this uniqueId");
+      return;
+    }
+
+    const productIdentifier = product.productIdentifier;
+
     const result = await Product.aggregate([
-      { $match: { uniqueId } },
+      { $match: { productIdentifier } },
       {
         $group: {
-          _id: "$uniqueId",
+          _id: "$productIdentifier",
           totalClicks: { $sum: "$productClickCount" },
         },
       },
     ]);
 
     if (result.length === 0) {
-      console.log("No products found with this uniqueId");
+      console.log("No products found with this productIdentifier");
       return;
     }
 

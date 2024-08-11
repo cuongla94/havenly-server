@@ -29,9 +29,10 @@ export interface IProductDetails {
 export interface IProduct {
     uniqueId: string;
     productSourceUrl: string;
-    productDetails: IProductDetails;
+    productDetails: IProductDetailsDocument;
     productClickCount: number;
-}
+    productIdentifier: string;
+  }
 
 export interface IProductBrandCount {
     productBrand: string;

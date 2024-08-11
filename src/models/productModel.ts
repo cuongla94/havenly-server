@@ -53,8 +53,14 @@ const ProductSchema: Schema<IProductDocument> = new Schema({
   uniqueId: { type: String, unique: true, required: true, minlength: 1, maxlength: 100 },
   productSourceUrl: { type: String, required: true, maxlength: 2048 },
   productDetails: { type: ProductDetailsSchema, required: true },
-  productClickCount: { type: Number, default: 0 }
+  productClickCount: { type: Number, default: 0 },
+  productIdentifier: { type: String, required: true },  // Now a stored field
 }, { timestamps: true });
+
+ProductSchema.pre<IProductDocument>('save', function (next) {
+  this.productIdentifier = `${this.productDetails.productBrand} ${this.productDetails.productName} ${this.productDetails.productGender} ${this.productDetails.productType}`;
+  next();
+});
 
 const Product = mongoose.model<IProductDocument>('Product', ProductSchema);
 
