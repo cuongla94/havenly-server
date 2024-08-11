@@ -1,4 +1,5 @@
 import { Document } from 'mongodb';
+import { IProduct } from 'types';
 
 export const getProducts = async (_, { filter, limit, offset }, { db }) => {
   const query: Document = { $and: [] };
@@ -71,13 +72,12 @@ export const getProducts = async (_, { filter, limit, offset }, { db }) => {
   ]).toArray();
 
   return {
-    products: products.map(product => ({
-      id: product._id.toString(),
+    products: products.map((product: IProduct) => ({
       uniqueId: product.uniqueId,
       productSourceUrl: product.productSourceUrl,
       productDetails: product.productDetails,
     })),
     totalCount,
-    productBrandCounts: productBrandCounts.map(brand => ({ count: brand.count }))
+    productBrandCounts: productBrandCounts.map((brand: any) => ({ count: brand.count }))
   };
 };

@@ -1,9 +1,7 @@
 import mongoose from 'mongoose'; // Import mongoose
 
-import { getProducts } from './GetProducts';
-import { searchProducts } from './SearchProducts';
-import { getProductSourceCounts } from './GetProductSourceCounts';
-import { increaseProductClick } from './Mutations';
+import { increaseProductClick, updateTopSellersProduct } from './Mutations';
+import { searchProducts, getProductSourceCounts, getProducts } from './Queries/';
 
 export const ProductResolver = {
   Query: {
@@ -13,5 +11,6 @@ export const ProductResolver = {
   },
   Mutation: {
     increaseProductClick,
+    updateTopSellersProduct
   }
 };

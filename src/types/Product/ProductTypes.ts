@@ -1,4 +1,3 @@
-import { IProductDetails } from './ProductEnums';
 import { IProductGender, IProductType, IProductSubType, IProductCurrency} from './ProductEnums';
 
 export interface IProductPriceHistory {
