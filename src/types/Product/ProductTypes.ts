@@ -1,4 +1,5 @@
-import { IProductGender, IProductType, IProductSubType, IProductCurrency } from './ProductEnums';
+import { IProductDetails } from './ProductEnums';
+import { IProductGender, IProductType, IProductSubType, IProductCurrency} from './ProductEnums';
 
 export interface IProductPriceHistory {
     price: string;
@@ -50,5 +51,13 @@ export interface IProductResponse {
     sourceCounts: IProductSourceCount[];
 }
 
+export interface ITopSellersProductResponse {
+    productDetails: IProductDetails;
+    numberOfClickCount: number;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export interface IProductDetailsDocument extends IProductDetails, Document {}
 export interface IProductDocument extends IProduct, Document {}
+    

@@ -3,6 +3,7 @@ import mongoose from 'mongoose'; // Import mongoose
 import { getProducts } from './GetProducts';
 import { searchProducts } from './SearchProducts';
 import { getProductSourceCounts } from './GetProductSourceCounts';
+import { increaseProductClick } from './Mutations';
 
 export const ProductResolver = {
   Query: {
@@ -11,18 +12,6 @@ export const ProductResolver = {
     getProductSourceCounts,
   },
   Mutation: {
-    increaseProductClick: async (_, { productId }) => {
-      const product = await mongoose.model('Product').findOneAndUpdate(
-        { uniqueId: productId },
-        { $inc: { productClickCount: 1 } },
-        { returnDocument: 'after' }
-      );
-
-      if (!product) {
-        throw new Error('Product not found');
-      }
-
-      return product;
-    },
+    increaseProductClick,
   }
 };
