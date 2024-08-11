@@ -52,7 +52,7 @@ export const searchProducts = async (_, { searchTerm, filter, limit, offset }, {
           productInStock: 1,
           productCurrency: 1,
           productShippingCost: 1,
-          priceHistory: 1
+          productPriceHistory: 1
         }
       }
     })

@@ -23,13 +23,14 @@ export interface IProductDetails {
     productCurrency: IProductCurrency;
     productShippingCost?: string;
     productRetailer: string;
-    priceHistory: IProductPriceHistory[];
+    productPriceHistory: IProductPriceHistory[];
 }
 
 export interface IProduct {
     uniqueId: string;
     productSourceUrl: string;
     productDetails: IProductDetails;
+    productClickCount: number;
 }
 
 export interface IProductBrandCount {

@@ -24,7 +24,7 @@ export const ProductTypes = gql`
     productCurrency: ProductCurrency
     productShippingCost: String
     productRetailer: String
-    priceHistory: [ProductPriceHistory]
+    productPriceHistory: [ProductPriceHistory]
   }
 
   type Product {
@@ -32,6 +32,7 @@ export const ProductTypes = gql`
     uniqueId: String
     productSourceUrl: String
     productDetails: ProductDetails
+    clickCount: Int 
   }
 
   type ProductBrandCount {

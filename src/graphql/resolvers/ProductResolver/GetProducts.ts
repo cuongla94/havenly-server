@@ -56,7 +56,7 @@ export const getProducts = async (_, { filter, limit, offset }, { db }) => {
           productInStock: 1,
           productCurrency: 1,
           productShippingCost: 1,
-          priceHistory: 1
+          productPriceHistory: 1
         }
       }
     })

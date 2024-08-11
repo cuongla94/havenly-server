@@ -1,5 +1,13 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IProductGender, IProductType, IProductSubType, IProductCurrency, IProductPriceHistory, IProductDetailsDocument, IProductDocument } from '../types';
+import { 
+  IProductGender, 
+  IProductType, 
+  IProductSubType, 
+  IProductCurrency, 
+  IProductPriceHistory, 
+  IProductDetailsDocument, 
+  IProductDocument 
+} from '../types';
 
 const PriceHistorySchema: Schema<IProductPriceHistory & Document> = new Schema({
   price: { type: String, required: true, maxlength: 50 },
@@ -23,17 +31,17 @@ const ProductDetailsSchema: Schema<IProductDetailsDocument> = new Schema({
   productCurrency: { type: String, enum: Object.values(IProductCurrency), required: true },  
   productShippingCost: { type: String }, 
   productRetailer: { type: String, required: true }, 
-  priceHistory: [PriceHistorySchema], 
+  productPriceHistory: [PriceHistorySchema]
 });
 
 ProductDetailsSchema.pre<IProductDetailsDocument>('save', function (next) {
   const currentPrice = this.productRetailPrice;
 
   if (currentPrice) {
-    const lastPriceEntry = this.priceHistory[this.priceHistory.length - 1];
+    const lastPriceEntry = this.productPriceHistory[this.productPriceHistory.length - 1];
 
     if (!lastPriceEntry || lastPriceEntry.price !== currentPrice) {
-      this.priceHistory.push({ price: currentPrice, date: new Date() });
+      this.productPriceHistory.push({ price: currentPrice, date: new Date() });
     }
   }
 
@@ -45,8 +53,9 @@ const ProductSchema: Schema<IProductDocument> = new Schema({
   uniqueId: { type: String, unique: true, required: true, minlength: 1, maxlength: 100 },
   productSourceUrl: { type: String, required: true, maxlength: 2048 },
   productDetails: { type: ProductDetailsSchema, required: true },
+  productClickCount: { type: Number, default: 0 }
 }, { timestamps: true });
 
 const Product = mongoose.model<IProductDocument>('Product', ProductSchema);
 
-export { Product, IProductDetailsDocument, IProductDocument };
+export { Product, ProductDetailsSchema, IProductDetailsDocument, IProductDocument };
