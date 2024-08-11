@@ -1,4 +1,5 @@
 import { Document } from 'mongodb';
+import { redisClient } from '../../../../services';
 
 export const searchProducts = async (_, { searchTerm, filter, limit, offset }, { db }) => {
   const query: Document = { $and: [] };
@@ -27,6 +28,13 @@ export const searchProducts = async (_, { searchTerm, filter, limit, offset }, {
 
   if (query.$and.length === 0) {
     delete query.$and;
+  }
+
+  const cacheKey = `search:${searchTerm}:${JSON.stringify(filter)}:${limit}:${offset}`;
+  const cachedProducts = await redisClient.get(cacheKey);
+  if (cachedProducts) {
+    console.log('Serving from cache');
+    return JSON.parse(cachedProducts);
   }
 
   const totalCount = await db.collection('products').countDocuments(query);
@@ -66,7 +74,7 @@ export const searchProducts = async (_, { searchTerm, filter, limit, offset }, {
     { $project: { productBrand: "$_id", count: 1, _id: 0 } }
   ]).toArray();
 
-  return {
+  const result = {
     products: products.map(product => ({
       id: product._id.toString(),
       uniqueId: product.uniqueId,
@@ -76,4 +84,10 @@ export const searchProducts = async (_, { searchTerm, filter, limit, offset }, {
     totalCount,
     productBrandCounts: productBrandCounts.map(brand => ({ count: brand.count }))
   };
+
+  await redisClient.set(cacheKey, JSON.stringify(result), {
+    EX: 300,
+  });
+
+  return result;
 };

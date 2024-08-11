@@ -9,10 +9,13 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "resolveJsonModule": true,
-    "noImplicitAny": false, 
+    "noImplicitAny": false,
     "moduleResolution": "node",
     "baseUrl": "./src",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@services/*": ["services/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
