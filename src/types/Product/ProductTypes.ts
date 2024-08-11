@@ -27,12 +27,16 @@ export interface IProductDetails {
 }
 
 export interface IProduct {
+    id: string;
     uniqueId: string;
     productSourceUrl: string;
     productDetails: IProductDetailsDocument;
     productClickCount: number;
     productIdentifier: string;
+    createdAt?: Date; 
+    relatedProducts: [IProduct];
   }
+  
 
 export interface IProductBrandCount {
     productBrand: string;

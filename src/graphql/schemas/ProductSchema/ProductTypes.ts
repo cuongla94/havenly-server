@@ -32,7 +32,9 @@ export const ProductTypes = gql`
     uniqueId: String
     productSourceUrl: String
     productDetails: ProductDetails
-    clickCount: Int 
+    productClickCount: Int 
+    createdAt: String
+    relatedProducts: [Product]
   }
 
   type ProductBrandCount {
