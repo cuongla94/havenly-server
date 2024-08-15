@@ -9,7 +9,7 @@ dotenv_1.default.config();
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 exports.config = {
     port: parseInt(process.env.PORT, 10),
-    mongoURL: process.env.MAYAHFRAGRANCES_MONGO_URL,
+    mongoURL: process.env.MAYAH_SHOP_MONGO_URL,
     logs: {
         level: process.env.LOG_LEVEL || 'silly',
     },
