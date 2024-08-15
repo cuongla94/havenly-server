@@ -1,6 +1,10 @@
 import { createClient } from 'redis';
 import { config } from '../config';
 
+if (!config.redis.host || !config.redis.port) {
+  throw new Error('Redis configuration is incomplete. Please check your environment variables.');
+}
+
 const url = `redis://${config.redis.password ? `:${config.redis.password}@` : ''}${config.redis.host}:${config.redis.port}`;
 
 const redisClient = createClient({ url });
