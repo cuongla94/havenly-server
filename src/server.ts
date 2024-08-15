@@ -53,10 +53,6 @@ const startServer = async () => {
       '/graphql',
       cors(corsOptions),
       express.json(),
-      cors<cors.CorsRequest>({
-         origin: ['http://localhost:3000', 'https://mayahshop.net'],
-        credentials: true 
-      }),
       expressMiddleware(server, {
         context: async ({ req }) => ({ token: req.headers.token, db }),
       }),
