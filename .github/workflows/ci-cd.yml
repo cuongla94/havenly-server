@@ -68,7 +68,17 @@ jobs:
     needs: docker-build-push
 
     steps:
-    - name: SSH and Deploy
+    - name: SSH and Pull Latest Code
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: ${{ secrets.DROPLET_USER }}
+        key: ${{ secrets.DROPLET_PRIVATE_KEY }}
+        script: |
+          cd /path/to/your/backend/folder
+          git pull origin main
+
+    - name: SSH and Deploy Docker Container
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DROPLET_IP }}
