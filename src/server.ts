@@ -35,13 +35,14 @@ const startServer = async () => {
       origin: [
         'http://localhost:3000', 
         'https://mayah-shop-ui.vercel.app/',
-        'https://mayahshop.net'
+        'https://mayahshop.net',
+        'http://161.35.231.58',
       ],
       methods: ['GET', 'POST', 'DELETE', 'PATCH'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
     };
-
+    app.options('*', cors(corsOptions)); 
     app.use(
       '/graphql',
       cors(corsOptions),
