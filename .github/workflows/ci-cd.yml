@@ -41,7 +41,7 @@ jobs:
     needs: build-and-test
 
     env:
-      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}  # Explicitly setting the environment variable
 
     steps:
     - name: Checkout code
@@ -51,13 +51,13 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Debug Environment Variables
-      run: echo "DOCKER_USERNAME=${{ env.DOCKER_USERNAME }}"
+      run: echo "DOCKER_USERNAME=${{ env.DOCKER_USERNAME }}"  # Debugging step to check if the variable is available
 
     - name: Login to DockerHub
       uses: docker/login-action@v2
       with:
-        username: ${{ env.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        username: ${{ env.DOCKER_USERNAME }}  # Using the environment variable
+        password: ${{ secrets.DOCKER_PASSWORD }}  # Using the secret for the password
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
@@ -73,7 +73,7 @@ jobs:
     env:
       DROPLET_IP: ${{ vars.DROPLET_IP }}
       DROPLET_USER: ${{ vars.DROPLET_USER }}
-      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}  # Explicitly setting the environment variable
 
     steps:
     - name: Print Connection Info
