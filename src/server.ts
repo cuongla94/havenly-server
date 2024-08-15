@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { expressMiddleware } from '@apollo/server/express4';
 import express, { Application } from 'express';
 import http from 'http';
 import cors from 'cors';
@@ -9,12 +10,7 @@ import { GraphqlSchema } from './graphql';
 import { connectToHavenlyDb, closeConnection } from './services';
 import Logger from './loaders/logger';
 import { config } from './config';
-
 dotenv.config();
-
-interface MyContext {
-  token?: string;
-}
 
 const startServer = async () => {
   const app: Application = express();
@@ -23,10 +19,19 @@ const startServer = async () => {
   try {
     const db = await connectToHavenlyDb();
 
-    const server = new ApolloServer<MyContext>({
+    const server = new ApolloServer({
       schema: GraphqlSchema,
-      plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-      introspection: true,  // Enable introspection
+      introspection: true,
+      status400ForVariableCoercionErrors: true,
+      plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer }),
+        process.env.NODE_ENV === 'production'
+        ? ApolloServerPluginLandingPageProductionDefault({
+            graphRef: 'my-graph-id@my-graph-variant',
+            footer: false,
+          })
+        : ApolloServerPluginLandingPageLocalDefault({ footer: false })
+      ]
     });
 
     await server.start();
@@ -40,15 +45,18 @@ const startServer = async () => {
       ],
       methods: ['GET', 'POST', 'DELETE', 'PATCH'],
       allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true
+      credentials: true,
     };
 
-    app.options('*', cors(corsOptions)); 
-
+    app.options('*', cors(corsOptions));
     app.use(
       '/graphql',
       cors(corsOptions),
       express.json(),
+      cors<cors.CorsRequest>({
+         origin: ['http://localhost:3000', 'https://mayahshop.net'],
+        credentials: true 
+      }),
       expressMiddleware(server, {
         context: async ({ req }) => ({ token: req.headers.token, db }),
       }),
