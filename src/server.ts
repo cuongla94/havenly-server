@@ -33,10 +33,12 @@ const startServer = async () => {
 
     const corsOptions = {
       origin: [
-        'http://localhost:5000'
+        'http://localhost:3000', 
+        'https://mayah-shop-ui.vercel.app/',
+        'https://mayahshop.net'
       ],
       methods: ['GET', 'POST', 'DELETE', 'PATCH'],
-      allowedHeaders: ['Content-Type', 'Authorization'], 
+      allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
     };
 
