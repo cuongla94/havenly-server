@@ -43,6 +43,9 @@ jobs:
     needs: build-and-test
     environment: CICD_KEYS
 
+    env:
+      DOCKER_USERNAME: "${{ vars.DOCKER_USERNAME }}"
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
