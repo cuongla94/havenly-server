@@ -67,7 +67,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: mayah-shop-server:latest  # Updated to remove DOCKER_USERNAME
+        tags: ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest  # Correctly tagged with Docker username
 
   deploy:
     runs-on: ubuntu-latest
@@ -99,7 +99,7 @@ jobs:
         username: ${{ env.DROPLET_USER }}
         key: ${{ secrets.DROPLET_PRIVATE_KEY }}
         script: |
-          docker pull mayah-shop-server:latest  # Updated to remove DOCKER_USERNAME
+          docker pull ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest  # Use the correct image tag
           docker stop mayah-shop-server || true
           docker rm mayah-shop-server || true
-          docker run -d --name mayah-shop-server -p 4000:4000 mayah-shop-server:latest  # Updated to remove DOCKER_USERNAME
+          docker run -d --name mayah-shop-server -p 4000:4000 ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest  # Use the correct image tag
