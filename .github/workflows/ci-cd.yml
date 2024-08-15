@@ -8,7 +8,7 @@ on:
 jobs:
   checkout-and-setup:
     runs-on: ubuntu-latest
-    environment: CICD_KEYS  # Specify the environment to access its variables and secrets
+    environment: CICD_KEYS
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     needs: checkout-and-setup
-    environment: CICD_KEYS  # Specify the environment here as well
+    environment: CICD_KEYS
 
     steps:
     - name: Checkout code
@@ -41,7 +41,7 @@ jobs:
   docker-build:
     runs-on: ubuntu-latest
     needs: build-and-test
-    environment: CICD_KEYS  # Specify the environment here
+    environment: CICD_KEYS
 
     env:
       DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
@@ -54,13 +54,13 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Debug Environment Variables
-      run: echo "DOCKER_USERNAME=${{ env.DOCKER_USERNAME }}"  # Debugging step to check if the variable is available
+      run: echo "DOCKER_USERNAME=${{ env.DOCKER_USERNAME }}"
 
     - name: Login to DockerHub
       uses: docker/login-action@v2
       with:
-        username: ${{ env.DOCKER_USERNAME }}  # Using the environment variable
-        password: ${{ secrets.DOCKER_PASSWORD }}  # Using the secret for the password
+        username: ${{ env.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
@@ -89,7 +89,7 @@ jobs:
         username: ${{ env.DROPLET_USER }}
         key: ${{ secrets.DROPLET_PRIVATE_KEY }}
         script: |
-          cd /path/to/your/backend/folder
+          cd ~/mayah-shop-server/
           git pull origin main
 
     - name: SSH and Deploy Docker Container
@@ -103,4 +103,3 @@ jobs:
           docker stop mayah-shop-server || true
           docker rm mayah-shop-server || true
           docker run -d --name mayah-shop-server -p 80:4000 ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest
-
