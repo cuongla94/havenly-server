@@ -26,6 +26,7 @@ const startServer = async () => {
     const server = new ApolloServer<MyContext>({
       schema: GraphqlSchema,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+      introspection: true,  // Enable introspection
     });
 
     await server.start();
@@ -40,8 +41,10 @@ const startServer = async () => {
       methods: ['GET', 'POST', 'DELETE', 'PATCH'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true
-    }
-app.options('*', cors(corsOptions)); 
+    };
+
+    app.options('*', cors(corsOptions)); 
+
     app.use(
       '/graphql',
       cors(corsOptions),
