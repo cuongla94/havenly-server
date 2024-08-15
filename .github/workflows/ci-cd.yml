@@ -89,7 +89,7 @@ jobs:
         username: ${{ env.DROPLET_USER }}
         key: ${{ secrets.DROPLET_PRIVATE_KEY }}
         script: |
-          cd ~/mayah-shop-server/
+          cd /home/cuongla/mayah-shop-server
           git pull origin main
 
     - name: SSH and Deploy Docker Container
