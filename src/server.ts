@@ -10,7 +10,10 @@ import { connectToHavenlyDb, closeConnection } from './services';
 import Logger from './loaders/logger';
 import { config } from './config';
 
-const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env';
+const prodEnv = process.env.NODE_ENV as string;
+console.log(`NODE_ENV: ${JSON.stringify(prodEnv)}`);
+
+const envFile = prodEnv === 'production' ? '.env.production' : '.env';
 dotenv.config({ path: envFile });
 
 interface MyContext {
