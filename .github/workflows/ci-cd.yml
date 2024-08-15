@@ -72,7 +72,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: docker-build
-
+    environment: CICD_KEYS
+    
     env:
       DROPLET_IP: ${{ vars.DROPLET_IP }}
       DROPLET_USER: ${{ vars.DROPLET_USER }}
