@@ -1,11 +1,5 @@
 import dotenv from 'dotenv';
-
-const prodEnv = process.env.NODE_ENV as string;
-console.log(`NODE_ENV: ${JSON.stringify(prodEnv)}`);
-
-const envFile = prodEnv === 'production' ? '.env.production' : '.env';
-dotenv.config({ path: envFile });
-process.env.NODE_ENV = prodEnv || 'development';
+dotenv.config();
 
 export const config = {
 	port: parseInt((process.env.PORT as string), 10),

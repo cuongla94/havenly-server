@@ -10,11 +10,7 @@ import { connectToHavenlyDb, closeConnection } from './services';
 import Logger from './loaders/logger';
 import { config } from './config';
 
-const prodEnv = process.env.NODE_ENV as string;
-console.log(`NODE_ENV: ${JSON.stringify(prodEnv)}`);
-
-const envFile = prodEnv === 'production' ? '.env.production' : '.env';
-dotenv.config({ path: envFile });
+dotenv.config();
 
 interface MyContext {
   token?: string;
@@ -43,9 +39,9 @@ const startServer = async () => {
       ],
       methods: ['GET', 'POST', 'DELETE', 'PATCH'],
       allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true,
-    };
-    app.options('*', cors(corsOptions)); 
+      credentials: true
+    }
+app.options('*', cors(corsOptions)); 
     app.use(
       '/graphql',
       cors(corsOptions),
