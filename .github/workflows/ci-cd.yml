@@ -8,6 +8,7 @@ on:
 jobs:
   checkout-and-setup:
     runs-on: ubuntu-latest
+    environment: CICD_KEYS  # Specify the environment to access its variables and secrets
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -20,6 +21,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     needs: checkout-and-setup
+    environment: CICD_KEYS  # Specify the environment here as well
 
     steps:
     - name: Checkout code
@@ -39,9 +41,10 @@ jobs:
   docker-build:
     runs-on: ubuntu-latest
     needs: build-and-test
+    environment: CICD_KEYS  # Specify the environment here
 
     env:
-      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}  # Explicitly setting the environment variable
+      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
 
     steps:
     - name: Checkout code
@@ -69,11 +72,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: docker-build
+    environment: CICD_KEYS  # Specify the environment here
 
     env:
       DROPLET_IP: ${{ vars.DROPLET_IP }}
       DROPLET_USER: ${{ vars.DROPLET_USER }}
-      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}  # Explicitly setting the environment variable
+      DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
 
     steps:
     - name: Print Connection Info
