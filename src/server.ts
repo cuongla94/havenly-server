@@ -1,8 +1,8 @@
+import dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import express, { Application } from 'express';
-import dotenv from 'dotenv';
 import http from 'http';
 import cors from 'cors';
 import { GraphqlSchema } from './graphql';
@@ -10,7 +10,8 @@ import { connectToHavenlyDb, closeConnection } from './services';
 import Logger from './loaders/logger';
 import { config } from './config';
 
-dotenv.config();
+const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env';
+dotenv.config({ path: envFile });
 
 interface MyContext {
   token?: string;
