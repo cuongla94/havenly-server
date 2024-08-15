@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env';
 dotenv.config({ path: envFile });
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+process.env.NODE_ENV = process.env.NODE_ENV as string|| 'development';
 
 export const config = {
 	port: parseInt((process.env.PORT as string), 10),
