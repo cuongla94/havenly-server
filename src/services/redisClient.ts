@@ -1,6 +1,7 @@
 import { createClient } from 'redis';
 import { config } from '../config';
 
+console.log(`config: ${JSON.stringify(config)}`);
 console.log(`config.redis: ${JSON.stringify(config.redis)}`);
 
 if (!config.redis.host || !config.redis.port) {
