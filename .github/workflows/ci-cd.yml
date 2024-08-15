@@ -102,4 +102,6 @@ jobs:
           docker pull ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest
           docker stop mayah-shop-server || true
           docker rm mayah-shop-server || true
-          docker run -d --name mayah-shop-server -p 80:4000 ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest
+          docker run -d --name mayah-shop-server -p 4000:4000 ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest
+
+
