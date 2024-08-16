@@ -103,4 +103,4 @@ jobs:
           docker pull ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest  # Pull the image with DockerHub username
           docker stop mayah-shop-server || true
           docker rm mayah-shop-server || true
-          docker run --env-file ~/mayah-shop-server/.env -p 4000:4000 --name mayah-shop-server ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest  # Run the container with DockerHub username
+          docker run -d --env-file ~/mayah-shop-server/.env -p 4000:4000 --name mayah-shop-server ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest  # Run the container with DockerHub username
