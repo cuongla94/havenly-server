@@ -67,7 +67,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: mayah-shop-server 
+        tags: ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest  # Added DockerHub username to the tag
 
   deploy:
     runs-on: ubuntu-latest
@@ -99,7 +99,7 @@ jobs:
         username: ${{ env.DROPLET_USER }}
         key: ${{ secrets.DROPLET_PRIVATE_KEY }}
         script: |
-          docker pull mayah-shop-server
+          docker pull ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest  # Pull the image with DockerHub username
           docker stop mayah-shop-server || true
           docker rm mayah-shop-server || true
-          docker run --env-file .env -p 4000:4000 --name mayah-shop-server mayah-shop-server
+          docker run --env-file .env -p 4000:4000 --name mayah-shop-server ${{ env.DOCKER_USERNAME }}/mayah-shop-server:latest  # Run the container with DockerHub username
