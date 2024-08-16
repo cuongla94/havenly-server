@@ -7,7 +7,7 @@ import express, { Application } from 'express';
 import http from 'http';
 import cors from 'cors';
 import { GraphqlSchema } from './graphql';
-import { connectToHavenlyDb, closeConnection } from './services';
+import { connectToMayahShopDB, closeConnection } from './services';
 import Logger from './loaders/logger';
 import { config } from './config';
 dotenv.config();
@@ -17,7 +17,7 @@ const startServer = async () => {
   const httpServer = http.createServer(app);
 
   try {
-    const db = await connectToHavenlyDb();
+    const db = await connectToMayahShopDB();
 
     const server = new ApolloServer({
       schema: GraphqlSchema,
@@ -61,7 +61,7 @@ const startServer = async () => {
     await new Promise<void>((resolve) =>
       httpServer.listen({ port: process.env.PORT || config.port }, resolve)
     );
-    Logger.info(`
+    Logger.silly(`
       ################################################
       🛡️  Server listening on port: ${config.port} 🛡️
       🌐 http://localhost:${config.port}/graphql

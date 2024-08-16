@@ -3,7 +3,13 @@ dotenv.config();
 
 export const config = {
 	port: parseInt(String(process.env.PORT), 10),
-	mongoURL: String(process.env.MAYAH_SHOP_MONGO_URL),
+	mongo: {
+		password: String(process.env.MAYAH_SHOP_MONGO_PASSWORD),
+		ip: String(process.env.MAYAH_SHOP_MONGO_IP),
+		user: String(process.env.MAYAH_SHOP_MONGO_USER),
+		port: String(process.env.MAYAH_SHOP_MONGO_PORT),
+		dbName: String(process.env.MAYAH_SHOP_MONGO_DB)
+	},
 	logs: {
 		level: String(process.env.LOG_LEVEL) || 'silly',
 	},
