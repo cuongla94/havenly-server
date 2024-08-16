@@ -43,6 +43,9 @@ jobs:
     needs: build-and-test
     environment: CICD_KEYS
 
+    env:
+      DOCKER_USERNAME: "${{ vars.DOCKER_USERNAME }}"
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -50,18 +53,21 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
+    - name: Debug Environment Variables
+      run: echo "DOCKER_USERNAME=${{ env.DOCKER_USERNAME }}"
+
     - name: Login to DockerHub
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}  # Username from secrets
-        password: ${{ secrets.DOCKER_PASSWORD }}  # Password from secrets
+        username: ${{ env.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: mayah-shop-server:latest  # Directly tag the image as mayah-shop-server:latest
+        tags: mayah-shop-server 
 
   deploy:
     runs-on: ubuntu-latest
@@ -93,7 +99,7 @@ jobs:
         username: ${{ env.DROPLET_USER }}
         key: ${{ secrets.DROPLET_PRIVATE_KEY }}
         script: |
-          docker pull mayah-shop-server:latest  # Use the image without Docker username
+          docker pull mayah-shop-server
           docker stop mayah-shop-server || true
           docker rm mayah-shop-server || true
-          docker run -d --name mayah-shop-server -p 4000:4000 mayah-shop-server:latest  # Use the image without Docker username
+          docker run --env-file .env -p 4000:4000 --name mayah-shop-server mayah-shop-server
