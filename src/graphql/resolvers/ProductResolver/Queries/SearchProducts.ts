@@ -1,4 +1,5 @@
 import { Document } from 'mongodb';
+import Logger from '../../../../loaders/logger'; // Adjust the import path for your Logger
 import { redisClient } from '../../../../services';
 
 export const searchProducts = async (_, { searchTerm, filter, limit, offset }, { db }) => {
@@ -31,10 +32,15 @@ export const searchProducts = async (_, { searchTerm, filter, limit, offset }, {
   }
 
   const cacheKey = `search:${searchTerm}:${JSON.stringify(filter)}:${limit}:${offset}`;
-  const cachedProducts = await redisClient.get(cacheKey);
-  if (cachedProducts) {
-    console.log('Serving from cache');
-    return JSON.parse(cachedProducts);
+
+  try {
+    const cachedProducts = await redisClient.get(cacheKey);
+    if (cachedProducts) {
+      Logger.info('Serving search results from cache');
+      return JSON.parse(cachedProducts);
+    }
+  } catch (error: any) {
+    Logger.error('Error retrieving search results from Redis:', error.message);
   }
 
   const totalCount = await db.collection('products').countDocuments(query);
@@ -85,9 +91,14 @@ export const searchProducts = async (_, { searchTerm, filter, limit, offset }, {
     productBrandCounts: productBrandCounts.map(brand => ({ count: brand.count }))
   };
 
-  await redisClient.set(cacheKey, JSON.stringify(result), {
-    EX: 300,
-  });
+  try {
+    await redisClient.set(cacheKey, JSON.stringify(result), {
+      EX: 300,
+    });
+    Logger.info('Search results cached successfully');
+  } catch (error: any) {
+    Logger.error('Error caching search results in Redis:', error.message);
+  }
 
   return result;
 };

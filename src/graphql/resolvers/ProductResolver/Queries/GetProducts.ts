@@ -2,7 +2,7 @@ import { Document } from 'mongodb';
 import { IProduct } from 'types';
 import { redisClient } from '../../../../services';
 
-export const getProducts = async (_, { filter, limit, offset }, { db }) => {
+export const getProducts = async (_, { filter, limit, offset }, { db, redisClient }) => {
   const query: Document = { $and: [] };
 
   if (filter) {
@@ -37,10 +37,14 @@ export const getProducts = async (_, { filter, limit, offset }, { db }) => {
 
   const cacheKey = `products:${JSON.stringify(filter)}:${limit}:${offset}`;
 
-  const cachedProducts = await redisClient.get(cacheKey);
-  if (cachedProducts) {
-    console.log('Serving from cache');
-    return JSON.parse(cachedProducts);
+  try {
+    const cachedProducts = await redisClient.get(cacheKey);
+    if (cachedProducts) {
+      console.log('Serving from cache');
+      return JSON.parse(cachedProducts);
+    }
+  } catch (error: any) {
+    console.error('Error retrieving from Redis:', error.message);
   }
 
   const totalCount = await db.collection('products').countDocuments(query);
@@ -90,10 +94,14 @@ export const getProducts = async (_, { filter, limit, offset }, { db }) => {
     productBrandCounts: productBrandCounts.map((brand: any) => ({ count: brand.count }))
   };
 
-  // Cache the result in Redis with an expiration time (e.g., 5 minutes)
-  await redisClient.set(cacheKey, JSON.stringify(result), {
-    EX: 300,
-  });
+  try {
+    // Cache the result in Redis with an expiration time (e.g., 5 minutes)
+    await redisClient.set(cacheKey, JSON.stringify(result), {
+      EX: 300,
+    });
+  } catch (error: any) {
+    console.error('Error setting cache in Redis:', error.message);
+  }
 
   return result;
 };

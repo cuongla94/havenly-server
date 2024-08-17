@@ -14,12 +14,11 @@ export const increaseProductClick = async (
   { productId }: IncreaseProductClickArgs, 
   { db }: ResolverContext
 ): Promise<IProductDocument> => {
-  // Use the Product model directly
   const product = await Product.findOneAndUpdate(
     { uniqueId: productId },
     { $inc: { productClickCount: 1 } },
-    { returnDocument: 'after' }  // Ensures the updated document is returned
-  ).exec();  // Use exec() to ensure correct typing and promise handling
+    { returnDocument: 'after' }
+  ).exec();
 
   if (!product) {
     throw new Error('Product not found');

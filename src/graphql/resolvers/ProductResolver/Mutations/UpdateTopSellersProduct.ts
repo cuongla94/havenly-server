@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
 import { Product, TopSellersProduct } from "../../../../models";
+import Logger from "../../../../loaders/logger"; // Adjust the import path for your Logger
 
 export const updateTopSellersProduct = async (uniqueId: string) => {
   try {
     const product = await Product.findOne({ uniqueId });
 
     if (!product) {
-      console.log("No products found with this uniqueId");
+      Logger.warn(`No product found with uniqueId: ${uniqueId}`);
       return;
     }
 
@@ -23,7 +23,7 @@ export const updateTopSellersProduct = async (uniqueId: string) => {
     ]);
 
     if (result.length === 0) {
-      console.log("No products found with this productIdentifier");
+      Logger.warn(`No products found with productIdentifier: ${productIdentifier}`);
       return;
     }
 
@@ -39,10 +39,8 @@ export const updateTopSellersProduct = async (uniqueId: string) => {
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
-    console.log(
-      `TopSellersProducts updated/inserted for uniqueId: ${uniqueId}`
-    );
-  } catch (error) {
-    console.error("Error updating TopSellersProducts:", error);
+    Logger.info(`TopSellersProduct updated/inserted for uniqueId: ${uniqueId}`);
+  } catch (error: any) {
+    Logger.error(`Error updating TopSellersProduct for uniqueId: ${uniqueId}:`, error.message);
   }
 };
